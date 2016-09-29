@@ -1,0 +1,2 @@
+c:\users\ninja\documents\visual studio 2015\Projects\ObligatorioProg2Parte1\ObligatorioProg2Parte1\bin\Debug\ObligatorioProg2Parte1.exe.config
+C:\Users\FAT\Desktop\Obli\ObligatorioProg2Parte1\bin\Debug\ObligatorioProg2Parte1.exe.config
