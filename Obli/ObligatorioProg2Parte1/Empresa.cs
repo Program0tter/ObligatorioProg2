@@ -96,7 +96,35 @@ namespace ObligatorioProg2Parte1
             return existe;
         }
 
+        public bool codigoEmbarcacionExiste(int codigoEmbarcacion)
+        {
+            int index = 0;
+            bool existe = false;
+            while (index < listaEmbarcacionesFabricadas.Count() && existe == false)
+            {
+                if(listaEmbarcacionesFabricadas[index].CodigoIdentificador == codigoEmbarcacion)
+                {
+                    existe = true;
+                }
+            }
+            return existe;
+        }
 
+        public Embarcacion devolverEmbarcacionPorCodigoIdentificador(int codigo)
+        {
+            Embarcacion unaEmbarcacion = null;
+            int index = 0;
+            bool seEncontro = false;
+            while (seEncontro == false && index < listaEmbarcacionesFabricadas.Count())
+            {
+                if(listaEmbarcacionesFabricadas[index].CodigoIdentificador == codigo)
+                {
+                    unaEmbarcacion = listaEmbarcacionesFabricadas[index];
+                    seEncontro = true;
+                }
+            }
+            return unaEmbarcacion;
+        }
 
 
 

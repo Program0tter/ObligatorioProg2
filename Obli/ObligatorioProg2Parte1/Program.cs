@@ -12,28 +12,89 @@ namespace ObligatorioProg2Parte1
         static void Main(string[] args)
         {
             Embarcacion.UltimoNumeroCodigo = 100;
+            crearMenu();
+
+         }
+
+        static void crearMenu()
+        {
+            bool salir = false;
+            do
+            {
+                Console.WriteLine("Ingrese la opción deseada:\n1 - Registrar mecánico en el sistema.\n2 - Registrar una nueva embarcación.\n3 - Ingresar nueva reparación.\n4 - Listar mecánicos que no hán realizado capacitación extra.\n5 - Salir.");
+                int opcionMenu = Convert.ToInt32(Console.ReadLine());
+                switch (opcionMenu)
+                {
+                    case 1:
+                        registrarMecanicoEnSistema();
+                        break;
+                    case 2:
+                        registrarEmbarcacionEnSistema();
+                        break;
+                    case 3:
+                        registrarReparacionEnSistema();
+                        break;
+                    case 4:
+                        listarMecanicosSinCapacitacion();
+                        break;
+                    case 5:
+                        salir = true;
+                        break;
+                    default:
+                        Console.WriteLine("ERROR: Debe ingresar una opcion valida.");
+                        break;                        
+                }
+            } while (salir == false);
 
         }
-
         static void registrarEmbarcacionEnSistema()
         {
             Console.WriteLine("Ingrese nombre de la embarcación");
             string nombre = Console.ReadLine().Trim();
-            if(nombre == "")
+            if (nombre == "")
             {
                 Console.WriteLine("ERROR: Debe ingresar un nombre");
-            }else if(unaEmpresa.nombreEmbarcacionExiste(nombre))
+            }
+            else if (unaEmpresa.nombreEmbarcacionExiste(nombre))
             {
                 Console.WriteLine("ERROR: Ya hay una embarcación con ese nombre en la base de datos.");
             }
             else
             {
-                Console.WriteLine("Ingrese la fecha de construcción:")
-                //Quedo de ver si hay que usar DateTime o string para las fechas.
+                Console.WriteLine("Ingrese la fecha de construcción usando el siguiente formato: Dia/Mes/Año./\nEg: 02/11/2016");
+                string fechaIngresada = Console.ReadLine();
+                if (fechaIngresada.IndexOf('/') == -1 || fechaIngresada == "")
+                {
+                    Console.WriteLine("Debe ingresar con el formato especificado en las instrucciones.");
+                }
+                else
+                {
+                    DateTime unafecha = DateTime.Parse(fechaIngresada);
+                    Console.WriteLine("Ingrese el tipo de motor de la embarcación:\n1 - Integrado\n2 - Fuera de borda\n3 - Otros");
+                    int opcionMotor = Convert.ToInt32(Console.ReadLine());
+                    if (opcionMotor < 1 || opcionMotor > 3)
+                    {
+                        Console.WriteLine("ERROR: Debe ingresar una opcion válida.");
+                    }
+                    else
+                    {
+                        unaEmpresa.registrarNuevaEmbarcacionConstruida(nombre, unafecha, opcionMotor);
+                        Console.WriteLine("Embarcación ingresada al sistema exitosamente.");
+                    }
+                }
             }
         }
-        
-        static void regitrarMecanicoEnSistema()
+
+        static void listarMecanicosSinCapacitacion()
+        {
+            List<Mecanico> listaMecanicosSinCapacitacionExtra = unaEmpresa.devolverListaDeMecanicosSinCapacitacionExtra();
+            foreach (Mecanico mec in listaMecanicosSinCapacitacionExtra)
+            {
+                Console.WriteLine(mec);
+            }
+        }
+
+        static void registrarMecanicoEnSistema()
         {
             Console.WriteLine("Ingrese el numero de registro del mecánico:");
             int numeroRegistroMecanico = Convert.ToInt32(Console.ReadLine());
@@ -45,7 +106,7 @@ namespace ObligatorioProg2Parte1
             {
                 Console.WriteLine("Ingrese un nombre:");
                 string nombreMecanico = Console.ReadLine().Trim();
-                if(nombreMecanico == "")
+                if (nombreMecanico == "")
                 {
                     Console.WriteLine("ERROR: Debe ingresar el nombre del mecánico.");
                 }
@@ -61,7 +122,7 @@ namespace ObligatorioProg2Parte1
                     {
                         Console.WriteLine("Ingrese el numero de puerta de la residencia.");
                         string numeroPuerta = Console.ReadLine().Trim();
-                        if(numeroPuerta == "")
+                        if (numeroPuerta == "")
                         {
                             Console.WriteLine("ERROR: Debe ingresar un numero de puerta.");
                         }
@@ -85,7 +146,7 @@ namespace ObligatorioProg2Parte1
                                 {
                                     Console.WriteLine("Ingrese el valor del jornal del mecánico:");
                                     int valorJornal = Convert.ToInt32(Console.ReadLine());
-                                    if(valorJornal <= 0)
+                                    if (valorJornal <= 0)
                                     {
                                         Console.WriteLine("ERROR: Debe ingresar un valor mayor a 0 para el jornal del mecánico.");
                                     }
@@ -94,7 +155,7 @@ namespace ObligatorioProg2Parte1
                                         Console.WriteLine("¿El mecánico ha realizado capacitación extra?\n1 - Si.\n2 - No.");
                                         int opcionElegida = Convert.ToInt32(Console.ReadLine());
                                         bool seCapacito = false;
-                                        if(opcionElegida < 0 || opcionElegida > 2)
+                                        if (opcionElegida < 0 || opcionElegida > 2)
                                         {
                                             Console.WriteLine("ERROR: Debe elegír una opción válida.");
                                         }
@@ -112,12 +173,51 @@ namespace ObligatorioProg2Parte1
                                 }
                             }
                         }
-                   
+
 
                     }
                 }
             }
-             
+
+        }
+
+        static void registrarReparacionEnSistema()
+        {
+            Console.WriteLine("Ingrese el código identificador de la embarcación a reparar.");
+            //Busco embarcación por nombre o por codigo? Los dos deberían ser únicos.
+            int codigo = Convert.ToInt32(Console.ReadLine());
+            if (!unaEmpresa.codigoEmbarcacionExiste(codigo))
+            {
+                Console.WriteLine("ERROR: El codigo ingresado no corresponde a ninguna embarcación en el sistema.");
+            }
+            else
+            {
+                Embarcacion unaEmbarcacion = unaEmpresa.devolverEmbarcacionPorCodigoIdentificador(codigo);
+                Console.WriteLine("Ingrese la fecha de ingreso de la embarcación al taller usando el siguiente formato: Dia/Mes/Año./\nEg: 02/11/2016");
+                string fechaIngreso = Console.ReadLine();
+                if (fechaIngreso.IndexOf('/') == -1 || fechaIngreso == "")
+                {
+                    Console.WriteLine("Debe ingresar la fecha con el formato especificado en las instrucciones.");
+                }
+                else
+                {
+                    DateTime unaFechaIngreso = DateTime.Parse(fechaIngreso);
+                    Console.WriteLine("Ingrese la fecha prometida de finalización de reparación en este formato: Dia/Mes/Año./\nEg: 02/11/2016");
+                    string fechaPrometida = Console.ReadLine();
+                    if (fechaPrometida.IndexOf('/') == -1 || fechaPrometida == "")
+                    {
+                        Console.WriteLine("Debe ingresar la fecha con el formato especificado en las instrucciones.");
+                    }
+                    else
+                    {
+                        DateTime unaFechaPrometida = DateTime.Parse(fechaPrometida);
+                        unaEmpresa.ingresarReparacionDeEmbarcacion(unaFechaIngreso, unaFechaPrometida, unaEmbarcacion);
+                        Console.WriteLine("Reparación ingresada al sistema existosamente");
+                    }
+
+                }
+
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ namespace ObligatorioProg2Parte1
                 tipoDeMotor = "Otros";
             }
 
-            string infoEmbarcacion = "Nombre: " + this.Nombre + "\nCodigo identificador: " + this.CodigoIdentificador + "\nFecha de construccion: " + this.FechaConstruccion + "\nTipo de motor: " + tipoDeMotor;
+            string infoEmbarcacion = "Nombre: " + this.Nombre + "\nCodigo identificador: " + this.CodigoIdentificador + "\nFecha de construccion: " + this.FechaConstruccion + "\nTipo de motor: " + TipoMotor;
            
             return infoEmbarcacion;
         }
